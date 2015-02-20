@@ -341,18 +341,18 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 		constraints.length() ? "\tstatic constraints = {$newline$constraints\t}" : ''
 	}
 
-    String propertyNameForColumn(Column column) {
-        def finder = { Property property ->
-            Column propColumn = property.columnIterator.next()
-            propColumn == column
-        }
+	String propertyNameForColumn(Column column) {
+		def finder = { Property property ->
+			Column propColumn = property.columnIterator.next()
+			propColumn == column
+		}
 
-        def columnProperty = getAllPropertiesIterator().find(finder)
+		def columnProperty = getAllPropertiesIterator().find(finder)
 
-        if (!columnProperty) { columnProperty = newProperties.find(finder) }
+		if (!columnProperty) { columnProperty = newProperties.find(finder) }
 
-        columnProperty?.name ?: column.name
-    }
+		columnProperty?.name ?: column.name
+	}
 
 	protected boolean isDateType(Type type) {
 		(type instanceof DateType) || (type instanceof TimestampType) || (type instanceof TimeType) ||
@@ -536,26 +536,26 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 		mapping.append renderId()
 		mapping.append renderVersion()
 		mapping.append renderTable()
-        mapping.append renderColumnMapping()
+		mapping.append renderColumnMapping()
 
 		mapping.length() ? "\tstatic mapping = {$newline$mapping\t}" : ''
 	}
 
-    String renderColumnMapping() {
-        def mapping = new StringBuilder()
-        getAllPropertiesIterator().each { Property property ->
-            Column column = property.columnIterator.next()
-            if (property.name != column.name)
-                mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
-        }
+	String renderColumnMapping() {
+		def mapping = new StringBuilder()
+		getAllPropertiesIterator().each { Property property ->
+			Column column = property.columnIterator.next()
+			if (property.name != column.name)
+				mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+		}
 
-        for (property in newProperties) {
-            Column column = property.columnIterator.next()
-            if (property.name + '_id' != column.name)
-                mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
-        }
-        mapping.toString()
-    }
+		for (property in newProperties) {
+			Column column = property.columnIterator.next()
+			if (property.name + '_id' != column.name)
+				mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+		}
+		mapping.toString()
+	}
 
 	String renderClassStart() {
 		"class ${getDeclarationName()}${renderImplements()}{"
