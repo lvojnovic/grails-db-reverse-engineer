@@ -547,14 +547,23 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 			Column column = property.columnIterator.next()
 			if (property.name != column.name)
 				mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+			mapping.append renderWhenForeignKeyIsAlsoAPrimaryKey(column, property)
 		}
 
-		for (property in newProperties) {
+		newProperties.each { Property property ->
 			Column column = property.columnIterator.next()
 			if (property.name + '_id' != column.name)
 				mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+			mapping.append renderWhenForeignKeyIsAlsoAPrimaryKey(column, property)
 		}
 		mapping.toString()
+	}
+
+	String renderWhenForeignKeyIsAlsoAPrimaryKey(Column column, Property property) {
+		def identityColumn = getIdentifierProperty().columnIterator.next()
+		if (column == identityColumn)
+			return "\t\t${property.name} insertable:false, updateable:false\n".toString()
+		return ''
 	}
 
 	String renderClassStart() {
