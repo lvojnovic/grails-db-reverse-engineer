@@ -523,8 +523,26 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 		mapping.append renderId()
 		mapping.append renderVersion()
 		mapping.append renderTable()
+        mapping.append renderColumnMapping()
+
 		mapping.length() ? "\tstatic mapping = {$newline$mapping\t}" : ''
 	}
+
+    String renderColumnMapping() {
+        def mapping = new StringBuilder()
+        getAllPropertiesIterator().each { Property property ->
+            Column column = property.columnIterator.next()
+            if (property.name != column.name)
+                mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+        }
+
+        for (property in newProperties) {
+            Column column = property.columnIterator.next()
+            if (property.name + '_id' != column.name)
+                mapping.append("\t\t${property.name} column:'${column.name}'\n".toString())
+        }
+        mapping.toString()
+    }
 
 	String renderClassStart() {
 		"class ${getDeclarationName()}${renderImplements()}{"
