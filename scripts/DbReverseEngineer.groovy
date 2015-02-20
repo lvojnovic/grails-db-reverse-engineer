@@ -83,6 +83,18 @@ protected  Map buildMergedConfig() {
 		mergedConfig.alwaysMapManyToManyTables = false
 	}
 
+	if (revengConfig.detectManyToMany instanceof Boolean) {
+		mergedConfig.detectManyToMany = revengConfig.detectManyToMany
+	} else {
+		mergedConfig.detectManyToMany = true
+	}
+
+	if (revengConfig.detectOneToOne instanceof Boolean) {
+		mergedConfig.detectOneToOne = revengConfig.detectOneToOne
+	} else {
+		mergedConfig.detectOneToOne = true
+	}
+
 	for (String name in ['versionColumns', 'manyToManyTables', 'manyToManyBelongsTos',
 	                     'includeTables', 'includeTableRegexes', 'includeTableAntPatterns',
 	                     'excludeTables', 'excludeTableRegexes', 'excludeTableAntPatterns',

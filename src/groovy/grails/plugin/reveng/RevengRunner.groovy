@@ -47,6 +47,8 @@ class RevengRunner {
 			reenigne.defaultCatalog = config.defaultCatalog
 		}
 		reenigne.overwrite = config.overwriteExisting
+		reenigne.detectOneToOne = config.detectOneToOne
+		reenigne.detectManyToMany = config.detectManyToMany
 
 		def strategy = reenigne.reverseEngineeringStrategy
 
