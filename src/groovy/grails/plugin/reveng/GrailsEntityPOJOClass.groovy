@@ -27,9 +27,11 @@ import org.hibernate.tool.hbm2x.Cfg2JavaTool
 import org.hibernate.tool.hbm2x.pojo.EntityPOJOClass
 import org.hibernate.type.CalendarDateType
 import org.hibernate.type.CalendarType
+import org.hibernate.type.CharacterType
 import org.hibernate.type.DateType
 import org.hibernate.type.IntegerType
 import org.hibernate.type.LongType
+import org.hibernate.type.StringType
 import org.hibernate.type.TimeType
 import org.hibernate.type.TimestampType
 import org.hibernate.type.Type
@@ -135,6 +137,12 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 			if (idProperty.value.identifierGeneratorStrategy == 'assigned') {
 				idDef.append delimiter
 				idDef.append "generator: \"assigned\""
+				delimiter = ', '
+			}
+
+			if (idProperty.type instanceof CharacterType || idProperty.type instanceof StringType) {
+				idDef.append delimiter
+				idDef.append "type: \"string\""
 				delimiter = ', '
 			}
 
