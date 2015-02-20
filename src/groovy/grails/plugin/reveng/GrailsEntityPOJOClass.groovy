@@ -320,7 +320,7 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 				clazz.table.uniqueKeyIterator.each { UniqueKey key ->
 					if (key.columnSpan == 1 || key.name == clazz.table.primaryKey?.name) return
 					if (key.columns[-1] == column) {
-						def otherNames = key.columns[0..-2].collect { "\"$it.name\"" }
+						def otherNames = key.columns[0..-2].collect { "\"${propertyNameForColumn(it)}\"" }
 						values.unique = '[' + otherNames.reverse().join(', ') + ']'
 					}
 				}
@@ -340,6 +340,19 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 
 		constraints.length() ? "\tstatic constraints = {$newline$constraints\t}" : ''
 	}
+
+    String propertyNameForColumn(Column column) {
+        def finder = { Property property ->
+            Column propColumn = property.columnIterator.next()
+            propColumn == column
+        }
+
+        def columnProperty = getAllPropertiesIterator().find(finder)
+
+        if (!columnProperty) { columnProperty = newProperties.find(finder) }
+
+        columnProperty?.name ?: column.name
+    }
 
 	protected boolean isDateType(Type type) {
 		(type instanceof DateType) || (type instanceof TimestampType) || (type instanceof TimeType) ||
