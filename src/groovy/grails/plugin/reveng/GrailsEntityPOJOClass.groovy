@@ -14,7 +14,10 @@
  */
 package grails.plugin.reveng
 
+import java.beans.Introspector;
+
 import org.hibernate.cfg.Configuration
+import org.hibernate.cfg.reveng.ReverseEngineeringStrategyUtil
 import org.hibernate.mapping.Column
 import org.hibernate.mapping.ForeignKey
 import org.hibernate.mapping.ManyToOne
@@ -551,12 +554,16 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 			mapping.append renderWhenForeignKeyIsAlsoAPrimaryKey(column, property)
 		}
 
+		def properName = { String columnName ->
+			Introspector.decapitalize( ReverseEngineeringStrategyUtil.toUpperCamelCase(columnName) )
+		}
+
 		getAllPropertiesIterator().each { Property property ->
-			appender(property, {p, c -> p.name != c.name})
+			appender(property, {p, c -> p.name != properName(c.name)})
 		}
 
 		newProperties.each { Property property ->
-			appender(property, {p, c -> p.name + '_id' != c.name})
+			appender(property, {p, c -> p.name + 'Id' != properName(c.name)})
 		}
 
 		mapping.toString()
