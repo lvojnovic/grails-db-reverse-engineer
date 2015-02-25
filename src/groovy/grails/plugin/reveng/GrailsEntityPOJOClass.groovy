@@ -564,7 +564,7 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 
 	String renderWhenForeignKeyIsAlsoAPrimaryKey(Column column, Property property) {
 		def identityColumn = getIdentifierProperty().columnIterator.next()
-		if (column == identityColumn)
+		if (column == identityColumn && property != getIdentifierProperty())
 			return "\t\t${property.name} insertable:false, updateable:false\n".toString()
 		return ''
 	}
