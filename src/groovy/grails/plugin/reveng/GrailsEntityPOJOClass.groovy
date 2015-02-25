@@ -14,7 +14,7 @@
  */
 package grails.plugin.reveng
 
-import java.beans.Introspector;
+import java.beans.Introspector
 
 import org.hibernate.cfg.Configuration
 import org.hibernate.cfg.reveng.ReverseEngineeringStrategyUtil
