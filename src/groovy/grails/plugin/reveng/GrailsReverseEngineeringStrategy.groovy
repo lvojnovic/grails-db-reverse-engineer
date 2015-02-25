@@ -14,10 +14,13 @@
  */
 package grails.plugin.reveng
 
+import java.beans.Introspector
 import java.util.regex.Pattern
 
 import org.hibernate.cfg.reveng.DefaultReverseEngineeringStrategy
 import org.hibernate.cfg.reveng.TableIdentifier
+import org.hibernate.util.StringHelper
+import org.hibernate.mapping.Column
 import org.hibernate.mapping.Table
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -47,6 +50,21 @@ class GrailsReverseEngineeringStrategy extends DefaultReverseEngineeringStrategy
 	protected boolean alwaysMapManyToManyTables
 	protected Map<String, String> belongsTos = [:]
 	protected AntPathMatcher antMatcher = new AntPathMatcher()
+
+	@Override
+	public String foreignKeyToEntityName(String keyname, TableIdentifier fromTable, List fromColumnNames, TableIdentifier referencedTable, List referencedColumnNames, boolean uniqueReference) {
+		String propertyName = Introspector.decapitalize( StringHelper.unqualify( getRoot().tableToClassName(referencedTable) ) )
+		if (!uniqueReference) {
+			if (fromColumnNames!=null && fromColumnNames.size() == 1) {
+				String columnName = ( (Column) fromColumnNames.get(0) ).getName()
+				if (columnName.endsWith('_id') && columnName.size() > 3) columnName = columnName[0..-4]
+				propertyName = Introspector.decapitalize( toUpperCamelCase(columnName) )
+			} else { // composite key or no columns at all safeguard
+				propertyName = propertyName + "By" + toUpperCamelCase(keyname)
+			}
+		}
+		return propertyName
+	}
 
 	@Override
 	boolean excludeTable(TableIdentifier ti) {
