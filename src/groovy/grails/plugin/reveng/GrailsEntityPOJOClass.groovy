@@ -387,6 +387,7 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 	}
 
 	String renderMany() {
+		if ( !revengConfig.renderHasMany ) return ''
 
 		def belongs = new TreeSet()
 		def hasMany = new TreeSet()
@@ -409,6 +410,8 @@ class GrailsEntityPOJOClass extends EntityPOJOClass {
 	}
 
 	String renderMappedBy() {
+		if ( !revengConfig.renderHasMany ) return ''
+
 		def belongs = new TreeSet()
 		def hasMany = new TreeSet()
 		findBelongsToAndHasMany belongs, hasMany

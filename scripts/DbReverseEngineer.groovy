@@ -95,6 +95,12 @@ protected  Map buildMergedConfig() {
 		mergedConfig.detectOneToOne = true
 	}
 
+	if (revengConfig.renderHasMany instanceof Boolean) {
+		mergedConfig.renderHasMany = revengConfig.renderHasMany
+	} else {
+		mergedConfig.renderHasMany = true
+	}
+
 	for (String name in ['versionColumns', 'manyToManyTables', 'manyToManyBelongsTos',
 	                     'includeTables', 'includeTableRegexes', 'includeTableAntPatterns',
 	                     'excludeTables', 'excludeTableRegexes', 'excludeTableAntPatterns',
